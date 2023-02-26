@@ -2,7 +2,7 @@ import re
 import csv
 
 Email_Regex = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
-Pwd_Regex = re.compile(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{5,}$')
+Pwd_Regex = re.compile(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])[A-Za-z\d@$!%*?&]{6,}$')
 
 
 def ValidEmail(email):
@@ -20,10 +20,10 @@ def ValidPwd(pwd):
 
 
 def register():
-    print('\nPlz Register New User\n')
+    print('\nPlease Register a New User\n')
     email = input('Email id: ')
     if ValidEmail(email):
-        password = input('Password: ')
+        password = input('Password[E.g-Abc@123]: ')
         if ValidPwd(password):
             write_file(email, password)
             print('\nUser Registered')
@@ -45,17 +45,17 @@ def login():
                 print('\nUser Not Found')
                 register()
         else:
-            print('\nInvalid Password,Please try again')
+            print('\nInvalid Password, Please try again')
             forgot_pwd()
     else:
-        print('\nInvalid Username,Please try again')
+        print('\nInvalid Username, Please try again')
 
 
 def forgot_pwd():
     email = input('Email id or User name: ')
     if ValidEmail(email):
         if search_pwd(email):
-            print('\nUser Found Log In Again!')
+            print('\nUser Found. Log In Again!')
             login()
         else:
             print('\nUser Not Found!')
@@ -64,25 +64,23 @@ def forgot_pwd():
         print('\nInvalid Username, Please Try Again')
 
 
-def search_file(email, pwd, mode='r',newline=''):
+def search_file(email, pwd, mode='r', newline=''):
     with open('Access_file.csv', mode, newline=newline) as f:
         reader = csv.reader(f)
         for row in reader:
             if email == row[0] and pwd == row[1]:
-
-             return True
+                return True
 
         return False
 
 
-def search_pwd(email, mode='r',newline=''):
-    with open('Access_file.csv', mode,newline=newline) as f:
+def search_pwd(email, mode='r', newline=''):
+    with open('Access_file.csv', mode, newline=newline) as f:
         reader = csv.reader(f)
         for row in reader:
             if email == row[0]:
-                print('\nPassword for '+ email + ' is '+ row[1])
-
-            return True
+                print('\nPassword for ' + email + ' is ' + row[1])
+                return True
         return False
 
 
@@ -92,19 +90,19 @@ def write_file(email, pwd, mode='a', newline=''):
         writer.writerow([email, pwd])
 
 
-
 def welcome():
     print("Hi There!!!")
-    print("~For going further Login else if you are New then please Register~")
-    W=input("Login|Registration|Forgot Pwd[Type L/R/F]: ")
-    if W=="L":
+    print("~For going further, please login, or if you are new then please register~")
+    W = input("Login|Registration|Forgot Password [Type L/R/F]: ")
+    if W == "L":
         login()
-    elif W=="R":
+    elif W == "R":
         register()
-    elif W=="F":
+    elif W == "F":
         forgot_pwd()
     else:
-        print("Error,please check")
+        print("Error, please check")
         welcome()
+
 welcome()
 
